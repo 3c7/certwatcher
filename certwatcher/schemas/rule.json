@@ -1,0 +1,36 @@
+{
+  "id": "https://github.com/3c7/certwatcher/",
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "title": "Rule",
+  "description": "A single rule, that can be used in a ruleset",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name for that rule"
+    },
+    "searchString": {
+      "description": "String to search for",
+      "type": "string"
+    },
+    "count": {
+      "description": "The count of the given string to search for",
+      "type": "integer",
+      "minimum": 1,
+      "default": 1
+    },
+    "searchIn": {
+      "description": "Where to search for that string",
+      "type": "string",
+      "enum": ["domain", "certificateAuthority"]
+    },
+    "description": {
+      "type": "string",
+      "description": "Description for that rule"
+    },
+    "color": {
+      "type": "string",
+      "enum": ["red", "yellow", "green"]
+    }
+  }
+}

@@ -1,0 +1,8 @@
+bin
+include
+lib
+lib64
+pip-selfcheck.json
+.idea
+certwatcher.egg-info
+certwatcher/__pycache__/

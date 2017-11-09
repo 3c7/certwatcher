@@ -1,0 +1,8 @@
+{
+  "name": "Sparkasse",
+  "searchString": "sparkasse",
+  "count": 1,
+  "description": "Searches for domains containing sparkasse",
+  "searchIn": "domain",
+  "color": "red"
+}

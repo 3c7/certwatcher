@@ -1,0 +1,8 @@
+{
+  "name": "Paypal",
+  "searchString": "paypal",
+  "count": 1,
+  "description": "Searches for domainnames containing paypal.",
+  "searchIn": "domain",
+  "color": "red"
+}

@@ -1,0 +1,8 @@
+{
+  "name": "Subdomain",
+  "searchString": ".",
+  "count": 3,
+  "description": "Searches for subdomains with level 3 or greater.",
+  "searchIn": "domain",
+  "color": "yellow"
+}
