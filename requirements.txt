@@ -1,2 +1,3 @@
 Click
-jsonschema
+yara-python
+termcolor

@@ -1,62 +1,34 @@
-import io
-import json
 import certstream
 import logging
-
+import yara
+import os
 
 from .models import Rule
 from glob import glob
-from jsonschema import validate, ValidationError
 from click import echo
 from termcolor import colored
 
 
 class CertWatcher:
     def __init__(self, **kwargs):
+        if isinstance(kwargs.get('disable', None), list):
+            self.disable = kwargs.get('disable', [])
+        else:
+            self.disable = []
+        self.logger = logging.getLogger('certwatcher')
         self.rules = []
-        self.schemas = {}
-        self.schema_path = kwargs.get('spath', 'schemas')
-        self.rule_path = kwargs.get('rpath', 'rules')
-        self.disable = kwargs.get('disable', [])
+        self.filepath = kwargs.get('filepath', None)
+        self.yara_path = kwargs.get('yara')
 
-        for rule in self.disable:
-            logging.debug('Ignoring rule {}.'.format(rule))
-
-        # Append rules
-        for rule in kwargs.get('rules', []):
-            if isinstance(rule, Rule):
-                if rule.name in self.rules:
-                    continue
-                self.rules.append(rule)
-                logging.debug('Appended rule {}.'.format(rule.name))
-
-        # Load schemas
-        for schema in glob('{}/*.json'.format(self.schema_path)):
-            with io.open(schema, 'r') as fh:
-                dict_schema = json.loads(fh.read())
-                self.schemas[dict_schema['title']] = dict_schema
-                logging.debug('Found schema {}.'.format(dict_schema['title']))
-
-    def import_json_rules(self, path):
-        files = glob('{}/*.json'.format(path))
-        for file in files:
-            with io.open(file, 'r') as fh:
-                dictrule = json.loads(fh.read())
-                try:
-                    validate(dictrule, self.schemas.get('Rule', {}))
-                except ValidationError as e:
-                    logging.error('Error while validating rule "{}": {}'.format(colored(dictrule['name']), e.message))
-
-            if dictrule.get('name') not in self.disable:
-                self.rules.append(Rule(
-                    name=dictrule.get('name', None),
-                    description=dictrule.get('description', None),
-                    search_string=dictrule.get('searchString', None),
-                    count=dictrule.get('count', None),
-                    search_in=dictrule.get('searchIn', 'domain'),
-                    color=dictrule.get('color', None)
-                ))
-                logging.debug('Added rule: {}'.format(dictrule['name']))
+        # Load yara rules
+        for file in glob('{}/*.yar'.format(self.yara_path)):
+            base = os.path.basename(file)
+            if base not in self.disable:
+                rule = yara.compile(file)
+                self.rules.append(Rule(base, rule))
+                logging.debug('Added rule {}.'.format(base))
+            else:
+                logging.debug('Ignoring rule {}'.format(base))
 
     def callback(self, m, c):
         if len(self.rules) > 0:
@@ -67,11 +39,10 @@ class CertWatcher:
             self.invoke_single_rule(message, rule)
 
     def invoke_single_rule(self, message, rule):
-        if rule.search_in == 'domain':
-            domains = message['data']['leaf_cert']['all_domains']
-            for dom in domains:
-                if rule.invoke(dom):
-                    echo('[Rule: {}] matches {}.'.format(rule.name, colored(dom, rule.color)))
+        for domain in message['data']['leaf_cert']['all_domains']:
+            match = rule.yara_rule.match(data=domain)
+            if match:
+                echo('[{}] matches domain {}.'.format(match[0].rule, colored(domain, 'yellow')))
 
-    def start_certstream(self, cb=None):
+    def start_certstream(self):
         certstream.listen_for_events(message_callback=self.callback)

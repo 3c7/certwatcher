@@ -1,8 +1,0 @@
-{
-  "name": "de-domain",
-  "searchString": ".de",
-  "count": 1,
-  "description": "Searches for de-domains.",
-  "searchIn": "domain",
-  "color": "green"
-}

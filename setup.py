@@ -20,7 +20,7 @@ setup(
     install_requires=[
         'Click',
         'termcolor',
-        'jsonschema'
+        'yara-python'
     ],
     entry_points={
         'console_scripts': [

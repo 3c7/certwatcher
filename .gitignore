@@ -6,3 +6,5 @@ pip-selfcheck.json
 .idea
 certwatcher.egg-info
 certwatcher/__pycache__/
+certwatcher/rules/de*
+certwatcher/rules/bund*
