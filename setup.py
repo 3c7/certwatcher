@@ -20,7 +20,8 @@ setup(
     install_requires=[
         'Click',
         'termcolor',
-        'yara-python'
+        'yara-python',
+        'certstream'
     ],
     entry_points={
         'console_scripts': [

@@ -1,3 +1,0 @@
-Click
-yara-python
-termcolor
