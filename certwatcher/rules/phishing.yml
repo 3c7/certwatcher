@@ -19,5 +19,8 @@ strings:
   - msft.
   - msft-
 
+# How many strings have to match, default: 1
+count: 1
+
 # Color of the warning, default is yellow
 color: red

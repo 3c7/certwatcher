@@ -33,6 +33,7 @@ class CertWatcher:
                     rule = Rule(
                         name=content['name'],
                         description=content['description'],
+                        count=content.get('count', 1),
                         color=content.get('color', 'yellow'),
                         strings=content['strings']
                     )
@@ -55,9 +56,16 @@ class CertWatcher:
     def invoke_single_yaml_rule(self, message, rule):
         for domain in message['data']['leaf_cert']['all_domains']:
             self.logger.debug('Checking {}...'.format(domain))
+
+            # catch IDNs
+            if domain[0:4] == 'xn--':
+                domain = domain.encode('idna').decode('idna')
+
+            count = 0
             for string in rule.strings:
-                if domain.find(string) != -1:
-                    self.logger.warning('{}: matches {}'.format(colored(domain, rule.color), rule.name))
+                count += domain.count(string)
+            if count >= rule.count:
+                self.logger.warning('{}: matches {}'.format(colored(domain, rule.color), rule.name))
 
     def start_certstream(self):
         certstream.listen_for_events(message_callback=self.callback)
