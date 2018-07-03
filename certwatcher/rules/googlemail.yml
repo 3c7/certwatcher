@@ -1,0 +1,23 @@
+# Name of the rule
+name: Basic phishing ruleset
+
+# Description of the rule
+description: Tries to detect various phishing attempts
+
+# If one of these strings is in the domain a warning is produced
+strings:
+  - googlemail.com
+  - googlemail-com
+  - mail.google
+  - mail-google
+  - gmail.com
+  - gmail-com
+  - office365.
+  - office-356.com
+  - microsoft.
+  - microsoft-
+  - msft.
+  - msft-
+
+# Color of the warning, default is yellow
+color: red

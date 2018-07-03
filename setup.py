@@ -5,7 +5,7 @@ with open('README.md') as f:
 
 setup(
     name='certwatcher',
-    version='0.1.1',
+    version='0.2.0',
     description='Watching certificate registrations through certstream and search for suspicious behavior',
     long_description=long_description,
     url='https://nope',
@@ -21,7 +21,8 @@ setup(
         'Click',
         'termcolor',
         'yara-python',
-        'certstream'
+        'certstream',
+        'PyYAML'
     ],
     entry_points={
         'console_scripts': [

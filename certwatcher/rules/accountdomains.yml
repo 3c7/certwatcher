@@ -1,0 +1,6 @@
+name: Possible phishing domains containing account subdomains
+description: Often "account" subdomains are used to disguise legitimate account pages
+strings:
+  - account.
+  - accounts.
+color: yellow
