@@ -59,7 +59,11 @@ class CertWatcher:
 
             # catch IDNs
             if domain[0:4] == 'xn--':
-                domain = domain.encode('idna').decode('idna')
+                try:
+                    domain = domain.encode('idna').decode('idna')
+                except UnicodeError as e:
+                    self.logger.error('Error while decoding IDN {}, probably because of an old IDNA implementation in'
+                                      ' python.'.format(domain))
 
             count = 0
             for string in rule.strings:
